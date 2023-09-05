@@ -37,15 +37,19 @@ class CertifyingInstitution(models.Model):
 
 class Certificate(models.Model):
     name = models.CharField(max_length=100, null=False)
-    certifying_institution = models.ForeignKey(
-        CertifyingInstitution,
-        on_delete=models.CASCADE,
-        related_name="certificate")
     timestamp = models.DateTimeField(auto_now_add=True)
     profiles = models.ManyToManyField(
         Profile,
-        related_name="certificates"
-    )
+        related_name="certificates",
+        max_length=500,
+        )
+    certifying_institution = models.ForeignKey(
+        CertifyingInstitution,
+        on_delete=models.CASCADE,
+        related_name="certificates",
+        max_length=500,
+        null=False
+        )
 
     def __str__(self):
-        return self.profiles.name
+        return self.name

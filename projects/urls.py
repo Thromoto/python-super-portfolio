@@ -15,5 +15,4 @@ router.register(r'certifying-institutions', CertifyingInstitutionViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('/<id_do_perfil>', include(router.urls)),
 ]

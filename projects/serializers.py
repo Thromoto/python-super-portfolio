@@ -22,21 +22,29 @@ class ProjectSerializer(serializers.ModelSerializer):
 class CertificateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certificate
+        fields = '__all__'
+
+
+class CertificateSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = Certificate
         fields = ["name"]
 
 
 class CertifyingInstitutionSerializer(serializers.ModelSerializer):
-    certificate = CertificateSerializer()
+    certificates = CertificateSerializer2(many=True)
 
     class Meta:
         model = CertifyingInstitution
-        fields = ["name", "url", "certificates"]
+        fields = "__all__"
 
     def create(self, validated_data):
-        current_user = self.context['request'].user
+        certificates = validated_data.pop("certificates")
+        certifying = CertifyingInstitution.objects.create(**validated_data)
 
-        certificate = validated_data.pop('certificates')
-        certificate['certifying_institution'] = current_user
-        certificate['profiles'] = Certificate.objects.create(**validated_data)
-        CertifyingInstitutionSerializer().create(validated_data=certificate)
-        return certificate['profiles']
+        for certificate in certificates:
+            Certificate.objects.create(
+                **certificate, certifying_institution=certifying
+            )
+
+        return certifying

@@ -13,7 +13,6 @@ from projects.serializers import (
     )
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import render
-from projects.permissions import IsOwner
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -51,4 +50,3 @@ class CertificateViewSet(viewsets.ModelViewSet):
 class CertifyingInstitutionViewSet(viewsets.ModelViewSet):
     queryset = CertifyingInstitution.objects.all()
     serializer_class = CertifyingInstitutionSerializer
-    permission_classes = [IsOwner]
